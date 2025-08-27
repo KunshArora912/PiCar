@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROS2 Pi5 Autonomous Car</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Pi5 Autonomous</a>
+            <button class="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#hardware">Hardware</a></li>
+                <li><a href="#software">Software</a></li>
+                <li><a href="#docs">Documentation</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>ROS2 Pi5 Autonomous Car</h1>
+            <p class="tagline">Autonomous robotics with LiDAR, ToF camera, and 4WD chassis.</p>
+            <div class="hero-image">
+                <!-- Placeholder for hero image -->
+                <div class="image-placeholder">Hero Image (CAD Render)</div>
+            </div>
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-primary">Watch Demo</a>
+                <a href="#hardware" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hardware Section -->
+    <section id="hardware" class="hardware">
+        <div class="container">
+            <h2>Hardware</h2>
+            <div class="hardware-grid">
+                <div class="hardware-drawings">
+                    <div class="drawing-tabs">
+                        <button class="tab-button active" data-tab="assembly">Assembly Views</button>
+                        <button class="tab-button" data-tab="exploded">Exploded View</button>
+                    </div>
+                    <div class="drawing-container">
+                        <div id="assembly" class="drawing-content active">
+                            <div class="drawing-image">
+                                <img src="assets/images/assembly.jpg" alt="Assembly Views" class="responsive-image">
+                            </div>
+                            <div class="drawing-actions">
+                                <a href="assets/images/assembly.jpg" download class="btn btn-outline">
+                                    <i class="fas fa-download"></i> Download Image
+                                </a>
+                            </div>
+                        </div>
+                        <div id="exploded" class="drawing-content">
+                            <div class="drawing-image">
+                                <img src="assets/images/exploded.jpg" alt="Exploded View" class="responsive-image">
+                            </div>
+                            <div class="drawing-actions">
+                                <a href="assets/images/exploded.jpg" download class="btn btn-outline">
+                                    <i class="fas fa-download"></i> Download Image
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hardware-details">
+                    <h3>Key Components</h3>
+                    <ul class="component-list">
+                        <li>Raspberry Pi 5</li>
+                        <li>Dual H-Bridge Motor Driver HAT</li>
+                        <li>4x DC Motors with Encoders</li>
+                        <li>LiDAR Sensor</li>
+                        <li>Time-of-Flight (ToF) Camera</li>
+                        <li>3D-Printed Chassis</li>
+                        <li>LiPo Battery Pack</li>
+                    </ul>
+                    <a href="#bom" class="btn btn-outline">View Full BOM</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Software Section -->
+    <section id="software" class="software">
+        <div class="container">
+            <h2>Software</h2>
+            <div class="software-content">
+                <div class="node-graph">
+                    <!-- Placeholder for ROS2 node graph -->
+                    <div class="image-placeholder">ROS2 Node Graph</div>
+                </div>
+                <div class="software-details">
+                    <h3>ROS2 Packages</h3>
+                    <ul>
+                        <li>Motor Control Node</li>
+                        <li>LiDAR Processing</li>
+                        <li>Camera Streaming</li>
+                        <li>Navigation Stack</li>
+                        <li>Object Detection</li>
+                    </ul>
+                    <div class="demo-video">
+                        <!-- Placeholder for demo video -->
+                        <div class="video-placeholder">Autonomous Navigation Demo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="docs" class="documentation">
+        <div class="container">
+            <h2>Documentation</h2>
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Build Guide</h3>
+                    <p>Step-by-step instructions for assembling your own Pi5 Autonomous Car.</p>
+                </div>
+                <div class="doc-card">
+                    <i class="fas fa-download"></i>
+                    <h3>Downloads</h3>
+                    <p>STL files, CAD models, and ROS2 packages.</p>
+                </div>
+                <div class="doc-card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>Source Code</h3>
+                    <p>Access the complete project on GitHub.</p>
+                    <a href="https://github.com/yourusername/pi5-autonomous-car" class="btn btn-github" target="_blank">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About the Project</h2>
+            <div class="about-content">
+                <div class="challenges">
+                    <h3>Challenges</h3>
+                    <p>Details about challenges faced during development and how they were overcome.</p>
+                </div>
+                <div class="future">
+                    <h3>Future Improvements</h3>
+                    <ul>
+                        <li>Enhanced object detection</li>
+                        <li>Improved path planning</li>
+                        <li>Multi-robot coordination</li>
+                        <li>Cloud-based monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pi5 Autonomous</h3>
+                    <p>Exploring the future of robotics with ROS2 and Raspberry Pi 5</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#hardware">Hardware</a></li>
+                        <li><a href="#software">Software</a></li>
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> your.email@example.com</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pi5 Autonomous. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
