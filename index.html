@@ -1,215 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROS2 Pi5 Autonomous Car</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Meta -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ROS2 Pi5 Autonomous Car — Portfolio</title>
+  <meta name="description" content="Raspberry Pi 5 + ROS2 autonomous car with LiDAR mapping, depth-only obstacle detection, and a real-time Flask+Socket.IO control UI." />
+  <link rel="icon" href="assets/favicon.ico" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ROS2 Pi5 Autonomous Car" />
+  <meta property="og:description" content="Pi5 + ROS2 + LiDAR + Arducam depth camera + Flask/Socket.IO UI." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/og-cover.jpg" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Small page-specific tweaks -->
+  <style>
+    /* Hardware carousel */
+    .scroll-gallery{overflow-x:auto;padding-bottom:8px}
+    .scroll-track{display:flex;gap:16px;scroll-snap-type:x mandatory}
+    .scroll-track figure{flex:0 0 auto;scroll-snap-align:start;margin:0}
+    .scroll-track img{max-height:420px;border-radius:12px}
+
+    /* Video embed */
+    .video-wrap{max-width:800px;margin:0 auto;margin-bottom:20px}
+    .video-16x9{position:relative;width:100%;padding-bottom:48%}
+    .video-16x9 iframe{position:absolute;inset:0;border:0;width:100%;height:100%;border-radius:12px;box-shadow:var(--shadow)}
+
+    /* Bigger UI screenshots */
+    .image-grid{display:grid;gap:12px;margin:12px 0}
+    @media (min-width: 900px){
+      .image-grid{grid-template-columns:1fr 1fr}
+    }
+    .image-grid figure{margin:0;text-align:center}
+    .image-grid img.xl-media{width:100%;max-height:240px;object-fit:contain;border-radius:6px;background:var(--card);padding:6px;border:1px solid rgba(255,255,255,0.08)}
+    .image-grid figcaption{margin-top:6px;font-size:0.85em;color:var(--subtle);opacity:0.9}
+
+    /* Callouts */
+    .callouts{display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin:24px 0}
+    .callout{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px;transition:transform 0.2s ease}
+    .callout:hover{transform:translateY(-2px)}
+    .callout i{font-size:20px;color:var(--brand);margin-bottom:8px;display:inline-block}
+    .callout h3{margin:8px 0;font-size:1.1em}
+    .callout p{font-size:0.95em;margin:8px 0 0;line-height:1.5}
+
+    /* Small niceties */
+    .bullets{padding-left:18px}
+    .bullets li{margin:.35rem 0}
+    .checklist{padding-left:18px}
+    .checklist li{margin:.35rem 0}
+    .table-scroll{overflow:auto;border-radius:8px}
+    table.bom{width:100%;border-collapse:collapse;font-size:15px}
+    table.bom th, table.bom td{padding:10px 12px;text-align:left}
+    .contact.card{border-radius:12px;padding:16px}
+    .hero-points{margin-top:14px}
+    .hero-points li{margin:.35rem 0}
+
+    /* ---------- SIZE TRIMS (make UI screenshots + demo smaller) ---------- */
+
+    /* shrink depth-ui & naive-map screenshots in the Software section */
+    #software .image-grid img{
+      max-height: 260px;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      background: var(--card);
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 900px){
+      #software .image-grid img{ max-height: 220px; }
+    }
+
+    /* narrow the demo video player */
+    .video-wrap{
+      max-width: 640px;      /* was 800px */
+      margin: 0 auto 16px;
+    }
+    .video-16x9{ padding-bottom: 56.25%; } /* exact 16:9 */
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">Pi5 Autonomous</a>
-            <button class="theme-toggle">
-                <i class="fas fa-moon"></i>
-                <i class="fas fa-sun"></i>
-            </button>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#hardware">Hardware</a></li>
-                <li><a href="#software">Software</a></li>
-                <li><a href="#docs">Documentation</a></li>
-                <li><a href="#about">About</a></li>
-            </ul>
-            <div class="hamburger">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-        </div>
-    </nav>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a class="logo" href="#home">Pi5 Autonomous</a>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <h1>ROS2 Pi5 Autonomous Car</h1>
-            <p class="tagline">Autonomous robotics with LiDAR, ToF camera, and 4WD chassis.</p>
-            <div class="hero-image">
-                <!-- Placeholder for hero image -->
-                <div class="image-placeholder">Hero Image (CAD Render)</div>
-            </div>
-            <div class="cta-buttons">
-                <a href="#demo" class="btn btn-primary">Watch Demo</a>
-                <a href="#hardware" class="btn btn-secondary">Learn More</a>
-            </div>
-        </div>
-    </section>
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+      </button>
 
-    <!-- Hardware Section -->
-    <section id="hardware" class="hardware">
-        <div class="container">
-            <h2>Hardware</h2>
-            <div class="hardware-grid">
-                <div class="hardware-drawings">
-                    <div class="drawing-tabs">
-                        <button class="tab-button active" data-tab="assembly">Assembly Views</button>
-                        <button class="tab-button" data-tab="exploded">Exploded View</button>
-                    </div>
-                    <div class="drawing-container">
-                        <div id="assembly" class="drawing-content active">
-                            <div class="drawing-image">
-                                <img src="assets/images/assembly.jpg" alt="Assembly Views" class="responsive-image">
-                            </div>
-                            <div class="drawing-actions">
-                                <a href="assets/images/assembly.jpg" download class="btn btn-outline">
-                                    <i class="fas fa-download"></i> Download Image
-                                </a>
-                            </div>
-                        </div>
-                        <div id="exploded" class="drawing-content">
-                            <div class="drawing-image">
-                                <img src="assets/images/exploded.jpg" alt="Exploded View" class="responsive-image">
-                            </div>
-                            <div class="drawing-actions">
-                                <a href="assets/images/exploded.jpg" download class="btn btn-outline">
-                                    <i class="fas fa-download"></i> Download Image
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hardware-details">
-                    <h3>Key Components</h3>
-                    <ul class="component-list">
-                        <li>Raspberry Pi 5</li>
-                        <li>Dual H-Bridge Motor Driver HAT</li>
-                        <li>4x DC Motors with Encoders</li>
-                        <li>LiDAR Sensor</li>
-                        <li>Time-of-Flight (ToF) Camera</li>
-                        <li>3D-Printed Chassis</li>
-                        <li>LiPo Battery Pack</li>
-                    </ul>
-                    <a href="#bom" class="btn btn-outline">View Full BOM</a>
-                </div>
-            </div>
-        </div>
-    </section>
+      <button class="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
 
-    <!-- Software Section -->
-    <section id="software" class="software">
-        <div class="container">
-            <h2>Software</h2>
-            <div class="software-content">
-                <div class="node-graph">
-                    <!-- Placeholder for ROS2 node graph -->
-                    <div class="image-placeholder">ROS2 Node Graph</div>
-                </div>
-                <div class="software-details">
-                    <h3>ROS2 Packages</h3>
-                    <ul>
-                        <li>Motor Control Node</li>
-                        <li>LiDAR Processing</li>
-                        <li>Camera Streaming</li>
-                        <li>Navigation Stack</li>
-                        <li>Object Detection</li>
-                    </ul>
-                    <div class="demo-video">
-                        <!-- Placeholder for demo video -->
-                        <div class="video-placeholder">Autonomous Navigation Demo</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#hardware">Hardware</a></li>
+        <li><a href="#software">Software</a></li>
+        <li><a href="#highlights">Highlights</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="https://github.com/KunshArora912/PiCARWEBFINAL" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <!-- Documentation Section -->
-    <section id="docs" class="documentation">
-        <div class="container">
-            <h2>Documentation</h2>
-            <div class="docs-grid">
-                <div class="doc-card">
-                    <i class="fas fa-book"></i>
-                    <h3>Build Guide</h3>
-                    <p>Step-by-step instructions for assembling your own Pi5 Autonomous Car.</p>
-                </div>
-                <div class="doc-card">
-                    <i class="fas fa-download"></i>
-                    <h3>Downloads</h3>
-                    <p>STL files, CAD models, and ROS2 packages.</p>
-                </div>
-                <div class="doc-card">
-                    <i class="fas fa-code-branch"></i>
-                    <h3>Source Code</h3>
-                    <p>Access the complete project on GitHub.</p>
-                    <a href="https://github.com/yourusername/pi5-autonomous-car" class="btn btn-github" target="_blank">
-                        <i class="fab fa-github"></i> View on GitHub
-                    </a>
-                </div>
-            </div>
+  <!-- HERO -->
+  <header id="home" class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <h1>ROS2 Pi&nbsp;5 Autonomous Car</h1>
+        <p class="tagline">
+          Real-time mapping with LiDAR, a depth-based safety layer, and a Flask + Socket.IO control page built from scratch.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#demo">Project Demo</a>
+          <a class="btn btn-outline" href="https://github.com/KunshArora912/PiCARWEBFINAL" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> View on GitHub
+          </a>
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About the Project</h2>
-            <div class="about-content">
-                <div class="challenges">
-                    <h3>Challenges</h3>
-                    <p>Details about challenges faced during development and how they were overcome.</p>
-                </div>
-                <div class="future">
-                    <h3>Future Improvements</h3>
-                    <ul>
-                        <li>Enhanced object detection</li>
-                        <li>Improved path planning</li>
-                        <li>Multi-robot coordination</li>
-                        <li>Cloud-based monitoring</li>
-                    </ul>
-                </div>
-            </div>
+        <ul class="hero-points">
+          <li>Deterministic left-hand wall-follow maneuver instead of opaque autonomy</li>
+          <li>Naive ROS2 LiDAR map plus a depth “guard” that can override manual input</li>
+          <li>Soft PWM ramps to reduce jerk and protect the chassis during starts/stops</li>
+        </ul>
+      </div>
+
+      <div class="hero-media">
+        <img src="assets/images/hero.jpg" alt="Pi5 Autonomous Car Hero" />
+      </div>
+    </div>
+  </header>
+
+  <!-- DEMO -->
+  <section id="demo" class="section">
+    <div class="container">
+      <h2>Demo</h2>
+      <p class="subtle">
+        The car navigates around a bottle barricade using the depth safety layer and the live control UI.
+      </p>
+
+      <div class="video-wrap">
+        <div class="video-16x9">
+          <iframe
+            src="https://www.youtube.com/embed/z8SuljxWT44"
+            title="Pi5 Autonomous Car Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
         </div>
-    </section>
+      </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Pi5 Autonomous</h3>
-                    <p>Exploring the future of robotics with ROS2 and Raspberry Pi 5</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#hardware">Hardware</a></li>
-                        <li><a href="#software">Software</a></li>
-                        <li><a href="#docs">Documentation</a></li>
-                        <li><a href="#about">About</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>Contact</h4>
-                    <p><i class="fas fa-envelope"></i> your.email@example.com</p>
-                    <div class="social-links">
-                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Pi5 Autonomous. All rights reserved.</p>
-            </div>
+      <div class="callouts">
+        <div class="callout">
+          <i class="fa-solid fa-camera"></i>
+          <h3>Depth Guard</h3>
+          <p>Computes a median distance inside a front-center ROI and uses hysteresis to avoid flicker. If the distance is unsafe, motors stop immediately.</p>
         </div>
-    </footer>
+        <div class="callout">
+          <i class="fa-solid fa-route"></i>
+          <h3>Wall-Follow Maneuver</h3>
+          <p>On command, the car backs up, performs a capped left probe, and advances in short pulses while maintaining a controlled gap to the obstacle line.</p>
+        </div>
+        <div class="callout">
+          <i class="fa-solid fa-laptop"></i>
+          <h3>Live UI</h3>
+          <p>Depth preview, an obstacle bar, and a naive LiDAR map stream provide real-time observability during testing and tuning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script src="js/main.js"></script>
+  <!-- HARDWARE -->
+  <section id="hardware" class="section alt">
+    <div class="container">
+      <h2>Hardware</h2>
+
+      <div class="grid-2">
+        <div class="scroll-gallery">
+          <div class="scroll-track">
+            <figure>
+              <img src="assets/images/assembly.jpg" alt="Assembly" />
+              <figcaption>Assembly View</figcaption>
+              <a href="assets/images/assembly.jpg" download class="thumb-btn"><i class="fa-solid fa-download"></i> Download</a>
+            </figure>
+            <figure>
+              <img src="assets/images/exploded.jpg" alt="Exploded" />
+              <figcaption>Exploded View</figcaption>
+              <a href="assets/images/exploded.jpg" download class="thumb-btn"><i class="fa-solid fa-download"></i> Download</a>
+            </figure>
+          </div>
+        </div>
+
+        <div>
+          <h3>Key Components</h3>
+          <ul class="checklist">
+            <li>Raspberry Pi 5</li>
+            <li>Dual H-Bridge Motor Driver HAT (PWM enable)</li>
+            <li>4× DC motors (encoders optional)</li>
+            <li>2D LiDAR (ROS2 LaserScan)</li>
+            <li>Arducam Depth (ToF) Camera</li>
+            <li>3D-printed chassis</li>
+            <li><strong>Power Bank</strong> + LiPo regulator</li>
+          </ul>
+
+          <div class="table-scroll">
+            <table class="bom">
+              <thead><tr><th>Part</th><th>Model</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td>Compute</td><td>Raspberry Pi 5</td><td>4–8GB RAM</td></tr>
+                <tr><td>Motor Driver</td><td>Dual H-Bridge HAT</td><td>PWM ENA/ENB → GPIO12/13</td></tr>
+                <tr><td>Motors</td><td>4× DC</td><td>Encoders optional</td></tr>
+                <tr><td>Depth</td><td>Arducam ToF</td><td>Up to 4m</td></tr>
+                <tr><td>LiDAR</td><td>2D LiDAR</td><td>Publishes <code>/scan</code></td></tr>
+                <tr><td>Battery</td><td>LiPo Pack + Reg.</td><td>Current-capable</td></tr>
+                <tr><td><strong>Power</strong></td><td><strong>Power Bank</strong></td><td><strong>Stable 5V to Pi</strong></td></tr>
+                <tr><td>Prints</td><td>Chassis + Mounts</td><td>STL in repo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SOFTWARE -->
+  <section id="software" class="section">
+    <div class="container">
+      <h2>Software</h2>
+
+      <div class="grid-2">
+        <div>
+          <h3>System layout</h3>
+          <ul class="bullets">
+            <li><strong>server.py</strong> initializes the depth camera, launches a Depth Guard thread (safety), optionally spins a ROS2 node for LiDAR, and runs the mapping loop that renders a JPEG map.</li>
+            <li><strong>Routes</strong>: <code>/move</code> (manual drive; forward is blocked when the guard is active), <code>/maneuver_depth</code> (left-hand bypass), <code>/video_feed</code> (depth MJPEG), <code>/naive_map_feed</code> (map MJPEG), plus lightweight debug endpoints.</li>
+            <li><strong>Socket.IO</strong> emits <code>obstacle_update</code> for low-latency UI feedback; if websockets are unavailable, the UI polls <code>/debug_distance</code>.</li>
+            <li><strong>Motor helpers</strong> wrap GPIO with PWM ramps to smooth acceleration and braking.</li>
+          </ul>
+
+          <h3>Why this looks like a real system</h3>
+          <ul class="bullets">
+            <li>Separate threads for sensing, safety, mapping, and UI → clearer failure isolation and simpler debugging.</li>
+            <li>Safety layer can override operator input → predictable behavior near obstacles.</li>
+            <li>Continuous streams (depth + map) → direct observability during bring-up and tuning.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Control UI (screenshots)</h3>
+          <div class="image-grid">
+            <figure>
+              <img src="assets/images/depth-ui.jpg" alt="Depth UI" />
+              <figcaption>Depth preview + obstacle status</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/images/map-ui.jpeg" alt="Naive Map UI" />
+              <figcaption>Naive LiDAR map (robot-centered crop)</figcaption>
+            </figure>
+          </div>
+
+          <h3>Safety & motor control</h3>
+          <ul class="bullets">
+            <li>Depth Guard uses a median over a front-center ROI with a short temporal buffer and hysteresis to stabilize decisions.</li>
+            <li>On trip, the server issues an immediate stop and blocks forward commands; steering/backward remain available to recover.</li>
+            <li>Soft-ramp PWM and duty caps reduce mechanical shock and keep the platform stable.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section id="highlights" class="section">
+    <div class="container">
+      <h2>Highlights</h2>
+      <ul class="bullets">
+        <li>A compact, depth-only safety layer replaced a more complex plan and improved reliability.</li>
+        <li>Repeatable left-side bypass around a bottle line using capped probe and small corrective bias.</li>
+        <li>Clear code paths and real-time UI shortened the debug loop substantially.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Divider band to avoid same-color jump -->
+  <div class="divider"></div>
+
+  <!-- ABOUT / STORY -->
+  <section id="about" class="section alt">
+    <div class="container">
+      <h2>Development notes</h2>
+
+      <div class="grid-2">
+        <div>
+          <h3>Scope and decisions</h3>
+          <ul class="bullets">
+            <li><strong>Initial goal:</strong> full navigation. Timeline made that unrealistic on the hardware available.</li>
+            <li><strong>Change in scope:</strong> focused on a dependable depth safety layer and a deterministic bypass maneuver.</li>
+            <li><strong>Signal stabilization:</strong> median ROI + short buffer + hysteresis outperformed raw minimum-distance methods.</li>
+          </ul>
+
+          <h3>Failure cases and fixes</h3>
+          <ul class="bullets">
+            <li>Occasional slow-down without full stop → added a hard stop latch and blocked forward at the route.</li>
+            <li>Over-rotation on the first probe → capped the probe duration and added a minor right-bias after each forward pulse.</li>
+            <li>Server stalls under mixed loads → separated safety/mapping threads from Flask routes to avoid blocking.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Path to a stable demo</h3>
+          <ul class="bullets">
+            <li>Bring up streams (depth, map) to validate sensing.</li>
+            <li>Implement guard; verify consistent stopping at a fixed distance.</li>
+            <li>Implement single-side (left) maneuver to reduce ambiguity and ease tuning.</li>
+            <li>Polish the UI to surface the relevant signals while driving.</li>
+          </ul>
+
+          <h3>Contact</h3>
+          <div class="contact card">
+            <p><i class="fa-solid fa-envelope"></i> kunsh912@gmail.com</p>
+            <div class="socials" style="display:flex;gap:12px">
+              <a href="https://www.linkedin.com/in/kunsh-arora/" target="_blank" aria-label="LinkedIn">
+                <i class="fab fa-linkedin"></i> LinkedIn
+              </a>
+              <a href="https://github.com/KunshArora912" target="_blank" aria-label="GitHub">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <h3>Pi5 Autonomous</h3>
+        <p class="subtle">ROS2 + Raspberry Pi 5 project: depth-based safety, streaming telemetry, and a minimal control stack.</p>
+      </div>
+      <div class="foot-links">
+        <a href="#home">Home</a>
+        <a href="#demo">Demo</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#software">Software</a>
+        <a href="#highlights">Highlights</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/KunshArora912/PiCARWEBFINAL" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="copy subtle"> 2025 · All rights reserved</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  
 </body>
 </html>
